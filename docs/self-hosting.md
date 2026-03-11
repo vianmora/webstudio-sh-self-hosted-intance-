@@ -4,6 +4,10 @@
 
 ---
 
+## Local install
+
+
+
 ## Deploy with Coolify (recommended)
 
 [Coolify](https://coolify.io) handles SSL, reverse proxy, and restarts automatically.

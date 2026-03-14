@@ -52,9 +52,9 @@ const getProjectQueue = (domain) => {
 };
 
 /**
- * Fetch build data from the builder app and extract the project domain.
+ * Fetch build data from the builder app and extract the project domain + custom domains.
  */
-const getProjectDomain = async (buildId) => {
+const getProjectBuildInfo = async (buildId) => {
   const url = new URL(`/rest/build/${buildId}`, BUILDER_INTERNAL_URL);
   const response = await fetch(url.href, {
     headers: { Authorization: SERVICE_TOKEN },
@@ -67,7 +67,10 @@ const getProjectDomain = async (buildId) => {
   if (!data.projectDomain) {
     throw new Error(`Build ${buildId} has no projectDomain`);
   }
-  return data.projectDomain;
+  return {
+    projectDomain: data.projectDomain,
+    customDomains: Array.isArray(data.customDomains) ? data.customDomains : [],
+  };
 };
 
 /**
@@ -155,8 +158,11 @@ const patchDataFilesForPrerender = async (dir) => {
 const publishBuild = async ({ buildId, builderOrigin }) => {
   log(`Starting publish for build ${buildId}`);
 
-  const domain = await getProjectDomain(buildId);
+  const { projectDomain: domain, customDomains } = await getProjectBuildInfo(buildId);
   log(`Project domain: ${domain}`);
+  if (customDomains.length > 0) {
+    log(`Custom domains: ${customDomains.join(", ")}`);
+  }
 
   // Nginx serves from /var/publish/$host — for wstd slugs (no dot), append PUBLISHER_HOST
   // to match the full hostname. Custom domains (contain a dot) are used as-is.
@@ -296,6 +302,15 @@ const publishBuild = async ({ buildId, builderOrigin }) => {
   log(`Publishing ${domain} to ${destDir}...`);
   await rm(destDir, { recursive: true, force: true });
   await cp(distDir, destDir, { recursive: true });
+
+  // 5b. Also copy to each verified custom domain directory.
+  // Nginx serves from /var/publish/$host — custom domains need their own directory.
+  for (const customDomain of customDomains) {
+    const customDestDir = join(PUBLISH_DIR, customDomain);
+    log(`Publishing custom domain ${customDomain} to ${customDestDir}...`);
+    await rm(customDestDir, { recursive: true, force: true });
+    await cp(distDir, customDestDir, { recursive: true });
+  }
 
   log(`Successfully published ${domain}`);
 };

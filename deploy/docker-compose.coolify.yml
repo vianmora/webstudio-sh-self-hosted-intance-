@@ -247,6 +247,7 @@ services:
     #   tls.domains → same
     labels:
       - "traefik.enable=true"
+      # ── Wildcard *.wstdwork.morain.fr (wildcard cert via Cloudflare DNS challenge) ─
       - "traefik.http.routers.ws-publisher.rule=HostRegexp(`^.+[.]wstdwork[.]morain[.]fr`)"
       - "traefik.http.routers.ws-publisher.entrypoints=https"
       - "traefik.http.routers.ws-publisher.tls=true"
@@ -256,6 +257,20 @@ services:
       - "traefik.http.routers.ws-publisher.service=ws-publisher-svc"
       - "traefik.http.routers.ws-publisher.middlewares=gzip"
       - "traefik.http.services.ws-publisher-svc.loadbalancer.server.port=80"
+      # ── Custom CNAME domains catch-all (HTTP-01 Let's Encrypt cert per domain) ──────
+      # priority=1 → wins only when no other router matches (wildcard above takes priority)
+      - "traefik.http.routers.ws-custom-domains.rule=HostRegexp(`^.+`)"
+      - "traefik.http.routers.ws-custom-domains.priority=1"
+      - "traefik.http.routers.ws-custom-domains.entrypoints=https"
+      - "traefik.http.routers.ws-custom-domains.tls=true"
+      - "traefik.http.routers.ws-custom-domains.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.ws-custom-domains.service=ws-publisher-svc"
+      - "traefik.http.routers.ws-custom-domains.middlewares=gzip"
+      # HTTP router needed for Let's Encrypt HTTP-01 challenge on custom domains
+      - "traefik.http.routers.ws-custom-domains-http.rule=HostRegexp(`^.+`)"
+      - "traefik.http.routers.ws-custom-domains-http.priority=1"
+      - "traefik.http.routers.ws-custom-domains-http.entrypoints=http"
+      - "traefik.http.routers.ws-custom-domains-http.service=ws-publisher-svc"
 
 configs:
   postgres_init:

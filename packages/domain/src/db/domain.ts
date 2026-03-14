@@ -261,7 +261,36 @@ export const updateStatus = async (
     return statusResult;
   }
 
-  const { data } = statusResult;
+  let domainStatus = statusResult.data.status;
+  let domainError: string | null = null;
+
+  // If not active, re-verify TXT via DNS in case in-memory state was lost (e.g. server restart in self-hosting).
+  if (domainStatus !== "active") {
+    const domainRow = await context.postgrest.client
+      .from("domainsVirtual")
+      .select("expectedTxtRecord")
+      .eq("domain", domain)
+      .eq("projectId", props.projectId)
+      .single();
+
+    if (!domainRow.error && domainRow.data.expectedTxtRecord) {
+      const reVerifyResult = await context.domain.domainTrpc.create.mutate({
+        domain,
+        txtRecord: domainRow.data.expectedTxtRecord,
+      });
+
+      if (reVerifyResult.success) {
+        domainStatus = "active";
+      } else {
+        domainError = reVerifyResult.error;
+      }
+    }
+  }
+
+  const data =
+    domainStatus === "error"
+      ? ({ status: "error" as const, error: domainError ?? "Unknown error" })
+      : ({ status: domainStatus });
 
   // update domain status
   const updatedDomainResult = await context.postgrest.client

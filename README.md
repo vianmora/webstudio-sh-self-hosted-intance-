@@ -4,7 +4,7 @@ This fork is automatically up on date with the main repo, waiting this feature t
 - `main` branch : ~the official repo
 - `developp` branch : the official repo with steroïdes you can use (new features are here, use this branch for self-hosting)
 
--> [More help for self-hosting the builder](/deploy/)
+-> [More help for self-hosting the builder](/docs/self-hosting.md)
 
 <img width="1512" alt="builder-screenshot" src="https://github.com/webstudio-is/.github/blob/main/assets/builder-screenshot.png?raw=true">
 <br /><br />

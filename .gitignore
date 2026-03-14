@@ -37,6 +37,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# self-hosting secrets (deploy/.env is created from deploy/.env.example)
+deploy/.env
+
 # data
 /data
 *.db
@@ -68,6 +71,5 @@ packages/prisma-client/src/__generated__
 # copilot instructions
 .github/instructions
 
-# claude
+# claude code
 .claude
-deploy/.env

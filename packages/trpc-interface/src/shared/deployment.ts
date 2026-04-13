@@ -78,6 +78,7 @@ export const deploymentRouter = router({
             buildId: input.buildId,
             builderOrigin: input.builderOrigin,
             buildMode: input.buildMode,
+            destination: input.destination,
           }),
         });
 

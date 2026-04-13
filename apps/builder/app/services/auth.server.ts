@@ -26,7 +26,7 @@ const transformRefToAlias = (input: string) => {
 export const callbackOrigin =
   env.DEPLOYMENT_ENVIRONMENT === "production"
     ? env.DEPLOYMENT_URL
-    : env.DEPLOYMENT_ENVIRONMENT === "staging" ||
+    : env.DEPLOYMENT_ENVIRONMENT === "preview" ||
         env.DEPLOYMENT_ENVIRONMENT === "development"
       ? `https://${transformRefToAlias(staticEnv.GITHUB_REF_NAME ?? "main")}.${env.DEPLOYMENT_ENVIRONMENT}.webstudio.is`
       : `https://wstd.dev:${env.PORT || 5173}`;
@@ -95,8 +95,15 @@ if (env.DEV_LOGIN === "true") {
         throw new Error("Secret is required");
       }
 
-      const [secret, email = env.DEV_LOGIN_EMAIL ?? "hello@webstudio.is"] =
-        secretValue.toString().split(":");
+      const emailValue = form.get("email");
+      const [secretFromField, emailFromSecret] = secretValue.toString().split(
+        ":"
+      );
+      const secret = secretFromField;
+      const email =
+        emailValue != null && emailValue.toString().trim() !== ""
+          ? emailValue.toString().trim()
+          : emailFromSecret?.trim() || env.DEV_LOGIN_EMAIL || "hello@webstudio.is";
 
       if (secret === env.AUTH_SECRET) {
         try {

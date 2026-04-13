@@ -575,18 +575,15 @@ const Publish = ({
       {publishError && <Text color="destructive">{publishError}</Text>}
 
       {publisherHost && (
-        <Grid columns={2} align="center" gap={1}>
-          <Text variant="labelsTitleCase">Rendering</Text>
-          <Select
-            fullWidth
-            value={buildMode}
-            options={["ssr", "ssg"] as const}
-            getLabel={(value) =>
-              value === "ssr" ? "SSR (dynamic data)" : "Static (SSG)"
-            }
-            onChange={(value) => setBuildMode(value)}
-          />
-        </Grid>
+        <Select
+          fullWidth
+          value={buildMode}
+          options={["ssr", "ssg"] as const}
+          getLabel={(value) =>
+            value === "ssr" ? "SSR (dynamic data)" : "SSG (static)"
+          }
+          onChange={(value) => setBuildMode(value)}
+        />
       )}
 
       <Tooltip

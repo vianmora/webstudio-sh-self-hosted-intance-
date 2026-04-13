@@ -417,6 +417,8 @@ const Publish = ({
   const userPlanFeatures = useStore($userPlanFeatures);
   const hasPaidPlan = userPlanFeatures.purchases.length > 0;
   const countdown = usePublishCountdown(isPublishing);
+  const publisherHost = useStore($publisherHost);
+  const [buildMode, setBuildMode] = useState<"ssg" | "ssr">("ssg");
 
   useEffect(() => {
     const form = buttonRef.current?.closest("form");
@@ -468,6 +470,7 @@ const Publish = ({
       projectId: project.id,
       domains,
       destination: "saas",
+      buildMode,
     });
 
     if (publishResult.success === false) {
@@ -570,6 +573,35 @@ const Publish = ({
   return (
     <Flex gap={2} shrink={false} direction={"column"}>
       {publishError && <Text color="destructive">{publishError}</Text>}
+
+      {publisherHost && (
+        <Flex gap={1} align="center">
+          <Label>
+            <Text variant="labelsTitleCase">Rendering</Text>
+          </Label>
+          <RadioGroup
+            value={buildMode}
+            onValueChange={(value) => {
+              setBuildMode(value as "ssg" | "ssr");
+            }}
+          >
+            <Flex gap={2}>
+              <Label>
+                <Flex gap={1} align="center">
+                  <RadioGroup.Item value="ssg" />
+                  <Text>Static</Text>
+                </Flex>
+              </Label>
+              <Label>
+                <Flex gap={1} align="center">
+                  <RadioGroup.Item value="ssr" />
+                  <Text>SSR</Text>
+                </Flex>
+              </Label>
+            </Flex>
+          </RadioGroup>
+        </Flex>
+      )}
 
       <Tooltip
         content={

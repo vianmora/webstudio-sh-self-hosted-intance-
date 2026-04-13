@@ -9,6 +9,8 @@ export const PublishInput = z.object({
   githubSha: z.string().optional(),
 
   destination: z.enum(["saas", "static"]),
+  // Self-hosting build mode: "ssg" (static, default), "ssr" (Node subprocess), "cloudflare"
+  buildMode: z.enum(["ssg", "ssr", "cloudflare"]).default("ssg"),
   // preview support
   branchName: z.string(),
   // action log helper (not used for deployment, but for action logs readablity)
@@ -59,7 +61,7 @@ export const deploymentRouter = router({
           body: JSON.stringify({
             buildId: input.buildId,
             builderOrigin: input.builderOrigin,
-            destination: input.destination,
+            buildMode: input.buildMode,
           }),
         });
 

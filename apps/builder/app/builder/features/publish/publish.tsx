@@ -418,7 +418,7 @@ const Publish = ({
   const hasPaidPlan = userPlanFeatures.purchases.length > 0;
   const countdown = usePublishCountdown(isPublishing);
   const publisherHost = useStore($publisherHost);
-  const [buildMode, setBuildMode] = useState<"ssg" | "ssr">("ssg");
+  const [buildMode, setBuildMode] = useState<"ssg" | "ssr">("ssr");
 
   useEffect(() => {
     const form = buttonRef.current?.closest("form");
@@ -575,32 +575,18 @@ const Publish = ({
       {publishError && <Text color="destructive">{publishError}</Text>}
 
       {publisherHost && (
-        <Flex gap={1} align="center">
-          <Label>
-            <Text variant="labelsTitleCase">Rendering</Text>
-          </Label>
-          <RadioGroup
+        <Grid columns={2} align="center" gap={1}>
+          <Text variant="labelsTitleCase">Rendering</Text>
+          <Select
+            fullWidth
             value={buildMode}
-            onValueChange={(value) => {
-              setBuildMode(value as "ssg" | "ssr");
-            }}
-          >
-            <Flex gap={2}>
-              <Label>
-                <Flex gap={1} align="center">
-                  <RadioGroup.Item value="ssg" />
-                  <Text>Static</Text>
-                </Flex>
-              </Label>
-              <Label>
-                <Flex gap={1} align="center">
-                  <RadioGroup.Item value="ssr" />
-                  <Text>SSR</Text>
-                </Flex>
-              </Label>
-            </Flex>
-          </RadioGroup>
-        </Flex>
+            options={["ssr", "ssg"] as const}
+            getLabel={(value) =>
+              value === "ssr" ? "SSR (dynamic data)" : "Static (SSG)"
+            }
+            onChange={(value) => setBuildMode(value)}
+          />
+        </Grid>
       )}
 
       <Tooltip

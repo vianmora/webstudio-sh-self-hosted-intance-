@@ -424,7 +424,7 @@ const Publish = ({
 
   useEffect(() => {
     if (publisherHost) {
-      loadCapabilities();
+      loadCapabilities({});
     }
   }, [publisherHost, loadCapabilities]);
 

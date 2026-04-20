@@ -568,6 +568,34 @@ const Publish = ({
     <Flex gap={2} shrink={false} direction={"column"}>
       {publishError && <Text color="destructive">{publishError}</Text>}
 
+      {publisherHost && (
+        <Select
+          fullWidth
+          value={buildMode}
+          options={["ssr", "ssg", "cloudflare"] as const}
+          getLabel={(value) => {
+            if (value === "ssr") return "SSR (dynamic data)";
+            if (value === "ssg") return "SSG (static site)";
+            return "Cloudflare Pages";
+          }}
+          getDescription={(value) => {
+            if (value === "ssr") return "Dynamic data, rendered per request";
+            if (value === "ssg") return "Static files, no dynamic data";
+            return "Deploy to Cloudflare edge";
+          }}
+          getItemProps={(value) =>
+            value === "cloudflare" && !capabilities?.cloudflare
+              ? {
+                  disabled: true,
+                  title:
+                    "Set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID on the publisher to enable",
+                }
+              : {}
+          }
+          onChange={(value) => setBuildMode(value)}
+        />
+      )}
+
       <Tooltip
         content={
           isPublishInProgress

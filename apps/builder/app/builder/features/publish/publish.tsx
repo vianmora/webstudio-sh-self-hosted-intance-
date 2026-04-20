@@ -415,6 +415,16 @@ const Publish = ({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [hasSelectedDomains, setHasSelectedDomains] = useState(false);
   const countdown = usePublishCountdown(isPublishing);
+  const publisherHost = useStore($publisherHost);
+  const [buildMode, setBuildMode] = useState<"ssg" | "ssr" | "cloudflare">("ssr");
+  const { load: loadCapabilities, data: capabilities } =
+    trpcClient.domain.publisherCapabilities.useQuery();
+
+  useEffect(() => {
+    if (publisherHost) {
+      loadCapabilities({});
+    }
+  }, [publisherHost, loadCapabilities]);
 
   useEffect(() => {
     const form = buttonRef.current?.closest("form");
@@ -466,6 +476,7 @@ const Publish = ({
       projectId: project.id,
       domains,
       destination: "saas",
+      buildMode,
     });
 
     if (publishResult.success === false) {

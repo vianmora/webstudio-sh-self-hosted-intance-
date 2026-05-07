@@ -191,12 +191,16 @@ describe("remove (msw)", () => {
                 return Promise.resolve({ success: true });
               },
             },
+            capabilities: {
+              query: () => Promise.resolve({ cloudflare: false }),
+            },
           },
           env: {
             BUILDER_ORIGIN: "https://apps.webstudio.is",
             GITHUB_REF_NAME: "main",
             GITHUB_SHA: undefined,
             PUBLISHER_HOST: "wstd.io",
+            TRPC_SERVER_URL: undefined,
           },
         },
       })
@@ -243,12 +247,16 @@ describe("remove (msw)", () => {
               mutate: () =>
                 Promise.resolve({ success: false, error: "Cloudflare failed" }),
             },
+            capabilities: {
+              query: () => Promise.resolve({ cloudflare: false }),
+            },
           },
           env: {
             BUILDER_ORIGIN: "https://apps.webstudio.is",
             GITHUB_REF_NAME: "main",
             GITHUB_SHA: undefined,
             PUBLISHER_HOST: "wstd.io",
+            TRPC_SERVER_URL: undefined,
           },
         },
       })

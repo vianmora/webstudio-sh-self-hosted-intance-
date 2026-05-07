@@ -96,14 +96,16 @@ if (env.DEV_LOGIN === "true") {
       }
 
       const emailValue = form.get("email");
-      const [secretFromField, emailFromSecret] = secretValue.toString().split(
-        ":"
-      );
+      const [secretFromField, emailFromSecret] = secretValue
+        .toString()
+        .split(":");
       const secret = secretFromField;
       const email =
         emailValue != null && emailValue.toString().trim() !== ""
           ? emailValue.toString().trim()
-          : emailFromSecret?.trim() || env.DEV_LOGIN_EMAIL || "hello@webstudio.is";
+          : emailFromSecret?.trim() ||
+            env.DEV_LOGIN_EMAIL ||
+            "hello@webstudio.is";
 
       if (secret === env.AUTH_SECRET) {
         try {

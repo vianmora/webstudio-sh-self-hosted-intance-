@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
   release:
     types: [published]
   workflow_dispatch:
@@ -53,6 +55,7 @@ jobs:
       #   push to develop               → :latest
       #   workflow_dispatch on develop  → :latest
       #   workflow_dispatch on other    → :<sanitized-branch>
+      #   pull_request                  → :pr-<number>
       #   published release             → :<version> + :latest
       - name: Extract metadata
         id: meta
@@ -63,6 +66,7 @@ jobs:
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/develop' || github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && steps.branch.outputs.is_main == 'true') }}
             type=raw,value=${{ steps.branch.outputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' && steps.branch.outputs.is_main == 'false' }}
+            type=raw,value=pr-${{ github.event.pull_request.number }},enable=${{ github.event_name == 'pull_request' }}
             type=semver,pattern={{version}},enable=${{ github.event_name == 'release' }}
             type=semver,pattern={{major}}.{{minor}},enable=${{ github.event_name == 'release' }}
 

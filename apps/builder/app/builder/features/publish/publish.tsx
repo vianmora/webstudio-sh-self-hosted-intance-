@@ -630,13 +630,21 @@ const Publish = ({
           value={buildMode}
           options={["ssr", "ssg", "cloudflare"] as const}
           getLabel={(value) => {
-            if (value === "ssr") return "SSR (dynamic data)";
-            if (value === "ssg") return "SSG (static site)";
+            if (value === "ssr") {
+              return "SSR (dynamic data)";
+            }
+            if (value === "ssg") {
+              return "SSG (static site)";
+            }
             return "Cloudflare Pages";
           }}
           getDescription={(value) => {
-            if (value === "ssr") return "Dynamic data, rendered per request";
-            if (value === "ssg") return "Static files, no dynamic data";
+            if (value === "ssr") {
+              return "Dynamic data, rendered per request";
+            }
+            if (value === "ssg") {
+              return "Static files, no dynamic data";
+            }
             return "Deploy to Cloudflare edge";
           }}
           getItemProps={(value) =>

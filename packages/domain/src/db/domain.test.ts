@@ -20,6 +20,9 @@ const createContext = (overrides: Partial<AppContext> = {}): AppContext =>
     domain: {},
     deployment: {
       deploymentTrpc: {
+        capabilities: {
+          query: () => Promise.resolve({ cloudflare: false }),
+        },
         unpublish: {
           mutate: () => Promise.resolve({ success: true }),
         },
@@ -239,6 +242,9 @@ describe("remove (msw)", () => {
       createContext({
         deployment: {
           deploymentTrpc: {
+            capabilities: {
+              query: () => Promise.resolve({ cloudflare: false }),
+            },
             publish: {
               mutate: () => Promise.resolve({ success: true }),
             },
@@ -293,6 +299,9 @@ describe("remove (msw)", () => {
       createContext({
         deployment: {
           deploymentTrpc: {
+            capabilities: {
+              query: () => Promise.resolve({ cloudflare: false }),
+            },
             publish: {
               mutate: () => Promise.resolve({ success: true }),
             },

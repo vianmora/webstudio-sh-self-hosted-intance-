@@ -457,7 +457,7 @@ const Publish = ({
 
   useEffect(() => {
     if (publisherHost) {
-      loadCapabilities({});
+      loadCapabilities(undefined);
     }
   }, [publisherHost, loadCapabilities]);
 
@@ -629,7 +629,7 @@ const Publish = ({
           fullWidth
           value={buildMode}
           options={["ssr", "ssg", "cloudflare"] as const}
-          getLabel={(value) => {
+          getLabel={(value: "ssr" | "ssg" | "cloudflare") => {
             if (value === "ssr") {
               return "SSR (dynamic data)";
             }
@@ -638,7 +638,7 @@ const Publish = ({
             }
             return "Cloudflare Pages";
           }}
-          getDescription={(value) => {
+          getDescription={(value: "ssr" | "ssg" | "cloudflare") => {
             if (value === "ssr") {
               return "Dynamic data, rendered per request";
             }

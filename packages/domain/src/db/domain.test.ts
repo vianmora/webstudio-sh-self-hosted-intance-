@@ -32,6 +32,7 @@ const createContext = (overrides: Partial<AppContext> = {}): AppContext =>
         GITHUB_REF_NAME: "main",
         GITHUB_SHA: undefined,
         PUBLISHER_HOST: "wstd.io",
+        TRPC_SERVER_URL: undefined,
       },
     },
     entri: {},
@@ -260,6 +261,7 @@ describe("remove (msw)", () => {
             GITHUB_REF_NAME: "main",
             GITHUB_SHA: undefined,
             PUBLISHER_HOST: "wstd.io",
+            TRPC_SERVER_URL: undefined,
           },
         },
       })
@@ -315,6 +317,7 @@ describe("remove (msw)", () => {
             GITHUB_REF_NAME: "main",
             GITHUB_SHA: undefined,
             PUBLISHER_HOST: "wstd.io",
+            TRPC_SERVER_URL: undefined,
           },
         },
       })

@@ -106,10 +106,10 @@ const getStatusText = (props: {
       break;
 
     case "VERIFIED_INITIALIZING":
-      text = "Status: Initializing CNAME";
+      text = "Status: Initializing DNS";
       break;
     case "VERIFIED_PENDING":
-      text = "Status: Waiting for CNAME propagation";
+      text = "Status: Waiting for DNS propagation";
       break;
     case "VERIFIED_ACTIVE":
       isVerifiedActive = true;
